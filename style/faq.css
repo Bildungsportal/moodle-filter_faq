@@ -1,0 +1,38 @@
+/* FAQ Item header styling */
+.btn-link:not(.btn-secondary) {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Moves help button to end of item */
+.filter_faq div.faq-has-morehelp {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+/* Aligns FAQ Item header to page header */
+summary.btn-link:not(.btn-secondary),
+a.btn-link:not(.btn-secondary) {
+    margin-left: -14px;
+}
+
+/* Aligns help button horizontally with item content */
+.filter_faq div.faq-morehelp > a {
+    margin-left: 12px;
+}
+
+/* More spacing between FAQ icon and text */
+summary.btn-link .fa-regular,
+a.btn-link .fa-regular {
+    padding-right: 5px;
+}
+
+/* Aligns FAQ text horizontally with FAQ header text */
+.filter_faq details p {
+    margin-left: 25px;
+}
+
+.filter_faq details ol,
+.filter_faq details ul {
+    margin-left: 3px;
+}

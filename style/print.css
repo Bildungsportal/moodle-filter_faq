@@ -1,0 +1,22 @@
+@media print {
+    body {
+        height: auto;
+    }
+    #page {
+        margin-top: 0 !important;
+    }
+    #page-footer, #footnote, #btn-print, body>.toast-wrapper, .filter_faq.page .action-wrapper {
+        display: none;
+    }
+
+    /* The page-header has class d-print-none by default */
+    #page-header {
+        display: block !important;
+    }
+}
+
+.filter_faq.page .action-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

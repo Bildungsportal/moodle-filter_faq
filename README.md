@@ -80,7 +80,7 @@ This pattern displays the helptext as a collapsible item using the HTML-elements
 This pattern should create a standardized link to the helptext. It should be based on the following format:
 
 ```
-<a href="$url" target="_blank" class="btn btn-link">
+<a href="$url" target="_blank" class="btn-link" style="margin: 0 4px;">
     <i class="fa-regular fa-circle-question"></i>
     $shorttitle
 </a>
@@ -91,7 +91,7 @@ This pattern should create a standardized link to the helptext. It should be bas
 This pattern should create a standardized link to the helptext. It should be based on the following format:
 
 ```
-<a href="$url" target="_blank" class="btn btn-link">
+<a href="$url" target="_blank" class="btn-link" style="margin: 0 4px;">
     <i class="fa-regular fa-circle-question"></i>
     $longtitle
 </a>

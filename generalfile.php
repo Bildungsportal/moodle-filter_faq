@@ -28,7 +28,7 @@ require_once('../../config.php');
 $f = required_param('f', PARAM_TEXT);
 $l = optional_param('lang', current_language(), PARAM_TEXT);
 
-$langs = [ $l ];
+$langs = [$l];
 $secondarylang = \filter_faq\lib::default_lang();
 if ($l != $secondarylang) {
     $langs[] = $secondarylang;
@@ -47,9 +47,9 @@ if (!empty($filepath) && file_exists($filepath)) {
     readfile($filepath);
     exit;
 } else {
-	$exparams = (object) [
-		'filename' => $f,
-		'shorttitle' => 'generalfile',
-	];
-	throw new \moodle_exception('file_not_found', 'filter_faq', '', $exparams, "Path $filepath");
+    $exparams = (object)[
+        'filename' => $f,
+        'shorttitle' => 'generalfile',
+    ];
+    throw new \moodle_exception('file_not_found', 'filter_faq', '', $exparams, "Path $filepath");
 }

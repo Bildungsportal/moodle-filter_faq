@@ -29,7 +29,7 @@ $f = required_param('f', PARAM_TEXT);
 $l = optional_param('lang', current_language(), PARAM_TEXT);
 $p = required_param('p', PARAM_TEXT);
 
-$langs = [ $l ];
+$langs = [$l];
 $secondarylang = \filter_faq\lib::default_lang();
 if ($l != $secondarylang) {
     $langs[] = $secondarylang;
@@ -40,17 +40,18 @@ $filepath = \filter_faq\lib::get_filepath($p, $f, $langs);
 if (!empty($filepath) && file_exists($filepath)) {
     $extension = pathinfo($filepath, PATHINFO_EXTENSION);
     $mimetype = mime_content_type($filepath);
-    header("Content-Type: $mimetype");
-    header('Content-Transfer-Encoding: binary');
+    header('Content-Disposition: inline; filename="' . basename($filepath) . '"');
     header('Content-Length: ' . filesize($filepath));
+    header('Content-Transfer-Encoding: binary');
+    header("Content-Type: $mimetype");
     ob_clean();
     flush();
     readfile($filepath);
     exit;
 } else {
-	$exparams = (object) [
-		'filename' => $f,
-		'shorttitle' => \filter_faq\lib::get_content($p, 'shorttitle', $langs),
-	];
-	throw new \moodle_exception('file_not_found', 'filter_faq', '', $exparams, "Path $filepath");
+    $exparams = (object)[
+        'filename' => $f,
+        'shorttitle' => \filter_faq\lib::get_content($p, 'shorttitle', $langs),
+    ];
+    throw new \moodle_exception('file_not_found', 'filter_faq', '', $exparams, "Path $filepath");
 }

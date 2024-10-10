@@ -35,3 +35,5 @@ $string['no_faq_found_for'] = 'Entschuldigung, die Seite {$a->path} enthält nic
 $string['open_help_page'] = 'Öffne Hilfeseite';
 $string['permalink'] = 'Permanenter Link auf diese Seite';
 $string['print'] = 'Drucken';
+$string['stringlib:invalid_path'] = 'Ungültiger Pfad für String-Bibliothek "{$a->match}"';
+$string['more_help'] = 'Mehr';

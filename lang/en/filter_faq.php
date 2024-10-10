@@ -39,6 +39,7 @@ $string['pluginname'] = 'FAQ Filter';
 $string['pluginname:settings'] = 'FAQ Filter - settings';
 $string['print'] = 'Print';
 $string['privacy:metadata'] = 'This plugin does not store any data at all.';
-
+$string['stringlib:invalid_path'] = 'Invalid stringlib path "{$a->match}"';
 $string['urlshortener'] = 'URL Shortener';
 $string['urlshortener:description'] = 'Please set the URL if you are using an URL-shortener. All permalinks will use that urlshortener.';
+$string['more_help'] = 'More';

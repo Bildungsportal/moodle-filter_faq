@@ -35,14 +35,12 @@
                 {{{longtitle}}}
             </summary>
             {{^morehelpshown}}
-                <div class="faq-has-morehelp">
-                    <div class="faq-morehelp">
-                        <a href="{{{urlprimary}}}" class="btn btn-link" target="_blank">
-                            <i class="fa-solid fa-up-right-from-square"></i>
-                            {{#str}} morehelp {{/str}}
-                        </a>
-                    </div>
+                <div class="flex-container">
                     {{{shortdescription}}}
+                    <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                        {{#str}} more_help, filter_faq {{/str}}
+                    </a>
                 </div>
             {{/morehelpshown}}
             {{#morehelpshown}}
@@ -72,14 +70,12 @@
                 {{{shorttitle}}}
             </summary>
             {{^morehelpshown}}
-                <div class="faq-has-morehelp">
-                    <div class="faq-morehelp">
-                        <a href="{{{urlprimary}}}" class="btn btn-link" target="_blank">
-                            <i class="fa-solid fa-up-right-from-square"></i>
-                            {{#str}} morehelp {{/str}}
-                        </a>
-                    </div>
+                <div class="flex-container">
                     {{{shortdescription}}}
+                    <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                        {{#str}} more_help, filter_faq {{/str}}
+                    </a>
                 </div>
             {{/morehelpshown}}
             {{#morehelpshown}}
@@ -149,15 +145,13 @@
 
 {{#type_textshort}}
     {{^morehelpshown}}
-        <div class="faq-has-morehelp">
-            <div class="faq-morehelp">
-                <a href="{{{urlprimary}}}" class="btn btn-link" target="_blank">
-                    <i class="fa-solid fa-up-right-from-square"></i>
-                    {{#str}} morehelp {{/str}}
-                </a>
-            </div>
+        <div>
             {{{shortdescription}}}
         </div>
+        <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
+            <i class="fa-solid fa-up-right-from-square"></i>
+            {{#str}} more_help, filter_faq {{/str}}
+        </a>
     {{/morehelpshown}}
     {{#morehelpshown}}
         {{{shortdescription}}}

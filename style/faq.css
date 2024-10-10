@@ -1,29 +1,117 @@
 /* FAQ Item header styling */
-.btn-link:not(.btn-secondary) {
+.btn-link:not(.btn-secondary):not(.morehelp-btn) {
     font-size: 16px;
     font-weight: bold;
 }
 
-/* Moves help button to end of item */
-.filter_faq div.faq-has-morehelp {
+.filter_faq.card.card-body {
+    padding-top: 65px;
+    max-width: 1980px;
+    margin: 0 auto;
+}
+
+.filter_faq .widgetcontainer .col-widget {
+    flex: 1 1 20% !important;
+}
+
+.filter_faq .widgetcontainer .card {
+    justify-content: center;
+}
+
+.filter_faq .widgetcontainer .card-footer {
+    height: 100%;
     display: flex;
-    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Flex layout for FAQ pages */
+.filter_faq .flex-container {
+    display: flex;
+    align-items: stretch;
+    gap: 5px;
+}
+
+.filter_faq .flex-container > .morehelp-btn {
+    flex: 80px;
+    height: unset;
+}
+
+.filter_faq .flex-container > *:not(.morehelp-btn) {
+    flex: calc(100% - 90px);
+}
+
+@media (max-width: 575px) {
+    .filter_faq .flex-container {
+        flex-direction: column;
+        align-items: unset;
+    }
+
+    .filter_faq .flex-container > .morehelp-btn {
+        flex-direction: row;
+        gap: 5px;
+        width: 90%;
+        height: 50px;
+        flex: unset;
+        margin: 0 auto;
+    }
+}
+
+/* Grid container for card based pages (about/getstarted) */
+.filter_faq .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 90px;
+    gap: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 575px) {
+    .filter_faq .faq-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        max-width: 1500px;
+        gap: 5px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .filter_faq .faq-grid .morehelp-btn {
+        flex-direction: row;
+        gap: 5px;
+        height: 50px;
+        margin-bottom: 15px;
+    }
+}
+
+/* left-handed elements */
+.filter_faq .faq-grid *:not(.morehelp-btn):not(.action-wrapper) {
+    grid-column: 1/2;
+}
+
+/* more help button styling */
+.filter_faq .morehelp-btn {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: #ac022f30;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: bold;
+    color: black !important;
 }
 
 /* Aligns FAQ Item header to page header */
 summary.btn-link:not(.btn-secondary),
-a.btn-link:not(.btn-secondary) {
+a.btn-link:not(.btn-secondary):not(.morehelp-btn) {
     margin-left: -14px;
-}
-
-/* Aligns help button horizontally with item content */
-.filter_faq div.faq-morehelp > a {
-    margin-left: 12px;
 }
 
 /* More spacing between FAQ icon and text */
 summary.btn-link .fa-regular,
-a.btn-link .fa-regular {
+a.btn-link:not(.morehelp-btn) .fa-regular {
     padding-right: 5px;
 }
 

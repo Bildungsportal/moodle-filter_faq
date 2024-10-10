@@ -24,7 +24,6 @@
 
 namespace filter_faq;
 
-use Exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
@@ -34,7 +33,7 @@ use moodle_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
-class externallib extends external_api  {
+class externallib extends external_api {
     public static function getpage_parameters() {
         return new external_function_parameters([
             'p' => new external_value(PARAM_INT, 'the helptext identifier'),
@@ -43,26 +42,28 @@ class externallib extends external_api  {
             'title' => new external_value(PARAM_TEXT, 'request longtitle or shorttitle as page title.'),
         ]);
     }
+
     public static function getpage($p, $ls, $text, $title) {
         global $DB, $USER;
         $params = self::validate_parameters(self::getpage_parameters(), [
-            'p' => $p, 'ls' => $ls, 'text' => $text, 'title' => $title
+            'p' => $p, 'ls' => $ls, 'text' => $text, 'title' => $title,
         ]);
-        if (!in_array($params['text'], [ 'long', 'short' ])) {
+        if (!in_array($params['text'], ['long', 'short'])) {
             throw new moodle_exception('invalid_parameter');
         }
-        if (!in_array($params['title'], [ 'long', 'short' ])) {
+        if (!in_array($params['title'], ['long', 'short'])) {
             throw new moodle_exception('invalid_parameter');
         }
-        $url = (new \moodle_url('/filter/faq/page.php', [ 'p' => $params['p'] ]))->out();
+        $url = (new \moodle_url('/filter/faq/page.php', ['p' => $params['p']]))->out();
         $footer = '<a href="' . $url . '" target="_blank"><i class="fa-solid fa-up-right-from-square"></i>&nbsp;' . get_string('morehelp') . '</a>';
 
-        return (object) [
+        return (object)[
             'body' => \filter_faq\lib::get_content($params['p'], $params['text'] . 'description', $params['ls']),
             'footer' => $text == 'short' ? $footer : '',
             'title' => \filter_faq\lib::get_content($params['p'], $params['title'] . 'title', $params['ls']),
         ];
     }
+
     public static function getpage_returns() {
         return new external_single_structure(
             array(

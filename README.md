@@ -42,11 +42,19 @@ The plugin also provides a string-API. Strings can be stored in the subfolder "s
 
 In Moodle, calling `\filter_faq\stringlib::get_string("local_eduportal", "roles:localized:emp")` would return the respective string. If such string is not present, filter_faq will automatically fallback to the Moodle `get_string`-Method. It checks for the existance of the string using Moodle's string manager. If the string does not exist there either, it will only return `[[identifier]]`, e.g. `[[roles:localized:emp]]`.
 
+Further, you can use the stringlib with its short-code, e.g.
+
+```
+{faq:stringlib:roles:localized:emp~local_eduportal~Employee}
+```
+
+Which basically has the Syntas {faq:stringlib:_textid_~_component_~_defaultvalue_}.
+
 ## Specification of files and values
 ### Files
 #### version
 
-The version-file must contain the date and a subversion in the format YYYYmmddvv, e.g. 2023031400 for the first revision of the file created on March 14th 2023. 
+The version-file must contain the date and a subversion in the format YYYYmmddvv, e.g. 2023031400 for the first revision of the file created on March 14th 2023.
 
 #### shorttitle
 
@@ -129,3 +137,77 @@ Only print the longtitle.
 ##### titleshort
 
 Only print the shorttitle.
+
+### Files within texts
+
+#### Use of the ELEMENTPATH
+
+Files can be placed inside each folder. Any of the text-sources within the same folder
+can refer to the respective file using the {{ELEMENTPATH}}-keyword. For example, you have
+a folder containing the following files:
+
+```
+en/an/article/about/
+- attachment.docx
+- image.png
+- longdescription
+- longtitle
+- shortdescription
+- shorttitle
+- version
+```
+
+Inside your faq-texts, you can use these files as follows:
+
+```html
+<p>
+    Please check or our <a href="{{ELEMENTPATH}}/attachment.docx">document</a>
+    or view the image:
+    <img src="{{ELEMENTPATH}}/image.png" alt="an image" />
+</p>
+```
+
+Similar to the use of text files, any language missing the respective file
+falls back to the file in the primary language. In case English is the primary
+language, just place your file in the en-Folder.
+
+#### Use of the GENERALPATH
+
+However, in certain cases you want to use files from another folder.
+If files shall be shared across folders, they must be placed inside the folder
+`general`, which contains a folder for each language you provide.
+
+To refer such files, you must use the {{GENERALPATH}}-keyword.
+
+In case you have place the files "attachment.docx" and "image.png" in your general-path:
+
+```
+general/en/an/article/about/
+- attachment.docx
+- image.png
+```
+
+and further you have an faq-folder
+
+```
+de/another/article/
+- longdescription
+- longtitle
+- shortdescription
+- shorttitle
+- version
+```
+
+Inside your faq-texts, you can use these files as follows:
+
+```html
+<p>
+    Please check or our <a href="{{GENERALPATH}}/an/article/about/attachment.docx">document</a>
+    or view the image:
+    <img src="{{GENERALPATH}}/an/article/about/image.png" alt="an image" />
+</p>
+```
+
+As you can see, the full path is used, but only without specifying the language.
+Again, the plugin tries to retrieve the file in the users preferred language and
+falls back to the primary language.

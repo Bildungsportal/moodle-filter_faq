@@ -30,22 +30,22 @@ $t = optional_param('t', '', PARAM_TEXT);
 $untestedpath = optional_param('path', '', PARAM_TEXT);
 if (!empty($untestedpath)) {
     $p = \filter_faq\lib::get_pathid($untestedpath);
-    $url = new \moodle_url('/filter/faq/page.php', [ 'lang' => $l, 'p' => $p, 't' => $t ]);
+    $url = new \moodle_url('/filter/faq/page.php', ['lang' => $l, 'p' => $p, 't' => $t]);
     redirect($url);
 }
 
 $p = required_param('p', PARAM_INT);
-$pathrecord = $DB->get_record('filter_faq', [ 'id' => $p ], '*', MUST_EXIST);
-$PAGE->set_url('/filter/faq/page.php', [ 'lang' => $l, 'p' => $p, 't' => $t ]);
+$pathrecord = $DB->get_record('filter_faq', ['id' => $p], '*', MUST_EXIST);
+$PAGE->set_url('/filter/faq/page.php', ['lang' => $l, 'p' => $p, 't' => $t]);
 $PAGE->set_context(context_system::instance());
 
-$langs = [ $l ];
+$langs = [$l];
 $secondarylang = \filter_faq\lib::default_lang();
 if ($l != $secondarylang) {
     $langs[] = $secondarylang;
 }
 
-$params = (object) [
+$params = (object)[
     'longdescription' => \filter_faq\lib::get_content($p, 'longdescription', $langs),
     'longtitle' => \filter_faq\lib::get_content($p, 'longtitle', $langs),
     'permalink' => \filter_faq\lib::permalink($pathrecord->path),
@@ -68,6 +68,31 @@ if (empty($t)) {
     $html = "{faq:{$pathrecord->path}:$t}";
 }
 
-if (empty($t)) echo $OUTPUT->header();
-echo format_text($html, FORMAT_HTML, $options);
-if (empty($t)) echo $OUTPUT->footer();
+if (empty($t)) {
+    ob_start();
+    echo $OUTPUT->header();
+    $header = ob_get_clean();
+
+    $metaTags = '<link rel="canonical" href="' . $params->permalink . '">';
+    $alternateUrl = new \moodle_url('/filter/faq/page.php', ['p' => $p]);
+    $metaTags .= '<link rel="alternate" href="' . $alternateUrl . '">';
+    foreach (['de', 'en'] as $lang) {
+        $alternateUrl = new \moodle_url('/filter/faq/page.php', [
+            'p' => $p,
+            'lang' => $lang
+        ]);
+        $metaTags .= '<link rel="alternate" hreflang="' . $lang . '" href="' . $alternateUrl->out(false) . '">';
+        $metaTags .= '<link rel="alternate" hreflang="' . $lang . '" href="' . $alternateUrl->out(false) . '&t">';
+    }
+
+    $header = str_replace('</head>', $metaTags . '</head>', $header);
+    echo $header;
+}
+if ($t != 'linkurl') {
+    echo format_text($html, FORMAT_HTML, $options);
+} else {
+    echo $html;
+}
+if (empty($t)) {
+    echo $OUTPUT->footer();
+}

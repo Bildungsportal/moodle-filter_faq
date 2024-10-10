@@ -42,55 +42,45 @@ class lib {
      * @return string
      */
     public static function get_content(int $pathid, string $content, array $langs): string {
-        global $CFG;
-
         $path = self::get_path($pathid);
-        $basepath = "$CFG->dataroot/faq";
 
-        $generalfilepath = new \moodle_url('/filter/faq/generalfile.php', [ 'l' => $langs[0] ]);
-		$elementfilepath = new \moodle_url('/filter/faq/elementfile.php', [ 'l' => $langs[0], 'p' => $pathid ]);
+        $generalfilepath = new \moodle_url('/filter/faq/generalfile.php', ['l' => $langs[0]]);
+        $elementfilepath = new \moodle_url('/filter/faq/elementfile.php', ['l' => $langs[0], 'p' => $pathid]);
 
         foreach ($langs as $lang) {
             // For security reasons we check again if the realpath is valid and inside the boundaries.
-            $file = realpath("$basepath/$lang/$path/$content");
-            if (strpos($file, $basepath) === 0) {
-                if (file_exists($file)) {
-                    $text = file_get_contents($file);
-                    $text = str_replace('{{GENERALPATH}}', $generalfilepath->out() . '&f=', $text);
-                    $text = str_replace('{{ELEMENTPATH}}', $elementfilepath->out() . '&f=', $text);
-                    return self::enhancetext($text);
-                }
-            } else if($file) {
-                throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
+            $file = static::check_faq_path("$lang/$path/$content");
+            if (file_exists($file)) {
+                $text = file_get_contents($file);
+                $text = str_replace('{{GENERALPATH}}', $generalfilepath->out() . '&f=', $text);
+                $text = str_replace('{{ELEMENTPATH}}', $elementfilepath->out() . '&f=', $text);
+                return self::enhancetext($text);
             }
         }
 
-        return get_string('no_faq_found_for', 'filter_faq', [ 'path' => $path, 'content' => $content]);
+        return get_string('no_faq_found_for', 'filter_faq', ['path' => $path, 'content' => $content]);
     }
 
-	/**
-	 * Get the absolute filepath of an embedded file within a FAQ item.
-	 * @param int $pathid the pathid of the item.
-	 * @param string $filename the filename.
-	 * @param array $langs the languages to use.
-	 * @return string|null the absolute file path within the dataroot.
-	 */
-	public static function get_filepath(int $pathid, string $filename, array $langs): ?string {
-		global $CFG;
+    /**
+     * Get the absolute filepath of an embedded file within a FAQ item.
+     * @param int $pathid the pathid of the item.
+     * @param string $filename the filename.
+     * @param array $langs the languages to use.
+     * @return string|null the absolute file path within the dataroot.
+     */
+    public static function get_filepath(int $pathid, string $filename, array $langs): ?string {
         $path = self::get_path($pathid);
-        $basepath = "$CFG->dataroot/faq";
 
         foreach ($langs as $lang) {
             // For security reasons we check again if the realpath is valid and inside the boundaries.
-            $file = self::realpath("$basepath/$lang/$path/$filename");
-            if (strpos($file, $basepath) !== 0) {
-                throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
-            } else if(file_exists($file)) {
+            $file = self::check_faq_path("$lang/$path/$filename");
+            if (file_exists($file)) {
                 return $file;
             }
         }
-       return null;
-	}
+
+        return null;
+    }
 
     /**
      * Get the absolute filepath of an embedded file in the general files folder.
@@ -100,18 +90,14 @@ class lib {
      * @return string|null the absolute file path within the dataroot.
      */
     public static function get_generalfilepath(string $filename, array $langs): ?string {
-        global $CFG;
-        $basepath = "$CFG->dataroot/faq/general";
-
         foreach ($langs as $lang) {
             // For security reasons we check again if the realpath is valid and inside the boundaries.
-            $file = self::realpath("$basepath/$lang/$filename");
-            if (strpos($file, $basepath) !== 0) {
-                throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
-            } else if (file_exists($file)) {
+            $file = self::check_faq_path("general/$lang/$filename");
+            if (file_exists($file)) {
                 return $file;
             }
         }
+
         return null;
     }
 
@@ -124,14 +110,16 @@ class lib {
     public static function get_path(int $pathid): ?string {
         global $DB;
         $path = \filter_faq\cachelib::get('pages', $pathid);
-        if (!empty($path)) return $path;
+        if (!empty($path))
+            return $path;
 
-        $record = $DB->get_record('filter_faq', [ 'id' => $pathid ]);
+        $record = $DB->get_record('filter_faq', ['id' => $pathid]);
         if ($record) {
             \filter_faq\cachelib::set('pages', $pathid, $record->path);
             return $record->path;
         }
-        throw new \moodle_exception('exception:no_such_path', 'filter_faq', '', [ 'pathid' => $pathid]);
+
+        throw new \moodle_exception('exception:no_such_path', 'filter_faq', '', ['pathid' => $pathid]);
     }
 
     /**
@@ -142,7 +130,7 @@ class lib {
      * @throws \moodle_exception if invalid path was given.
      */
     public static function get_pathid(string $path, string $lang = ''): ?string {
-        global $CFG, $DB;
+        global $DB;
         // No preceding slash.
         if (substr($path, 0, 1) == '/') {
             $path = substr($path, 1);
@@ -168,18 +156,16 @@ class lib {
             return $pathid;
         }
         // Load pathid from database.
-        $record = $DB->get_record('filter_faq', [ 'path' => $path ]);
+        $record = $DB->get_record('filter_faq', ['path' => $path]);
         if ($record) {
             \filter_faq\cachelib::set('pages', $path, $record->id);
             return $record->id;
         }
+
         // Enter path in database if it is within the boundaries and the default language folder.
-        $basepath = "$CFG->dataroot/faq";
-        $file = self::realpath("$basepath/$lang/$path");
-        if (strpos($file, $basepath) !== 0) {
-            throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
-        } else if (file_exists($file)) {
-            $record = (object) [
+        $file = static::check_faq_path("$lang/$path");
+        if (file_exists($file)) {
+            $record = (object)[
                 'path' => $path,
                 'timecreated' => time(),
             ];
@@ -187,7 +173,21 @@ class lib {
             \filter_faq\cachelib::set('pages', $path, $record->id);
             return $record->id;
         }
+
         return null;
+    }
+
+    public static function check_faq_path($relative_path) {
+        global $CFG;
+
+        $basepath = str_replace('\\', '/', $CFG->dataroot) . '/faq';
+        $file = self::realpath("$basepath/$relative_path");
+
+        if (!str_starts_with($file, $basepath)) {
+            throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
+        }
+
+        return $file;
     }
 
     /**
@@ -196,7 +196,7 @@ class lib {
      * @return string
      */
     private static function enhancetext(string $text): string {
-        $needles = [ 'div', 'p', 'table', 'ol', 'ul', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+        $needles = ['div', 'p', 'table', 'ol', 'ul', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
         foreach ($needles as $needle) {
             if (strpos($text, "<$needle") !== false) {
                 return $text;
@@ -210,7 +210,9 @@ class lib {
         $urlshortener = get_config('filter_faq', 'urlshortener');
         if (!empty($urlshortener)) {
             $delimiter = '/';
-            if (str_ends_with($urlshortener, '/')) { $delimiter = ''; }
+            if (str_ends_with($urlshortener, '/')) {
+                $delimiter = '';
+            }
             return $urlshortener . $delimiter . $path;
         } else {
             return "{$CFG->wwwroot}/filter/faq/page.php?path={$path}";
@@ -223,7 +225,7 @@ class lib {
      * @return string
      */
     private static function realpath(string $path): string {
-        return array_reduce(explode('/', $path), function($a, $b) {
+        $path = array_reduce(explode('/', $path), function($a, $b) {
             if ($a === null) {
                 $a = "/";
             }
@@ -236,5 +238,12 @@ class lib {
 
             return preg_replace("/\/+/", "/", "$a/$b");
         });
+
+        if (DIRECTORY_SEPARATOR === '\\') {
+            // fix path for windows
+            $path = ltrim($path, '/');
+        }
+
+        return $path;
     }
 }

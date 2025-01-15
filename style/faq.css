@@ -32,12 +32,12 @@
     gap: 5px;
 }
 
-.filter_faq .flex-container > .morehelp-btn {
+.flex-container > .morehelp-btn {
     flex: 80px;
     height: unset;
 }
 
-.filter_faq .flex-container > *:not(.morehelp-btn) {
+.flex-container > *:not(.morehelp-btn) {
     flex: calc(100% - 90px);
 }
 
@@ -47,7 +47,7 @@
         align-items: unset;
     }
 
-    .filter_faq .flex-container > .morehelp-btn {
+    .flex-container > .morehelp-btn {
         flex-direction: row;
         gap: 5px;
         width: 90%;
@@ -58,7 +58,7 @@
 }
 
 /* Grid container for card based pages (about/getstarted) */
-.filter_faq .faq-grid {
+.faq-grid {
     display: grid;
     grid-template-columns: 1fr 90px;
     gap: 5px;
@@ -67,7 +67,7 @@
 }
 
 @media (max-width: 575px) {
-    .filter_faq .faq-grid {
+    .faq-grid {
         display: grid;
         grid-template-columns: 1fr;
         max-width: 1500px;
@@ -76,7 +76,7 @@
         margin-right: auto;
     }
 
-    .filter_faq .faq-grid .morehelp-btn {
+    .faq-grid .morehelp-btn {
         flex-direction: row;
         gap: 5px;
         height: 50px;
@@ -85,12 +85,12 @@
 }
 
 /* left-handed elements */
-.filter_faq .faq-grid *:not(.morehelp-btn):not(.action-wrapper) {
+.faq-grid *:not(.morehelp-btn):not(.action-wrapper) {
     grid-column: 1/2;
 }
 
 /* more help button styling */
-.filter_faq .morehelp-btn {
+.morehelp-btn {
     display: flex;
     height: 100%;
     width: 100%;
@@ -105,7 +105,7 @@
 
 /* Aligns FAQ Item header to page header */
 summary.btn-link:not(.btn-secondary),
-a.btn-link:not(.btn-secondary):not(.morehelp-btn) {
+a.btn-link:not(.btn-secondary):not(.morehelp-btn):not(.btn-link) {
     margin-left: -14px;
 }
 
@@ -123,4 +123,14 @@ a.btn-link:not(.morehelp-btn) .fa-regular {
 .filter_faq details ol,
 .filter_faq details ul {
     margin-left: 3px;
+}
+
+.filter_faq.element .btn-link:not(.morehelp-btn) {
+    padding-left: 5px;
+    padding-right: 0;
+    padding-top: 0;
+}
+
+.filter_faq.element .btn-link i {
+    padding-right: 0;
 }

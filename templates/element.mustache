@@ -22,7 +22,9 @@
                 <i class="fa-regular fa-circle-question"></i>
                 {{{longtitle}}}
             </summary>
-            {{{longdescription}}}
+            <div class="filter_faq element">
+                {{{longdescription}}}
+            </div>
         </details>
     {{/longtitle}}
 {{/type_collapsiblelonglong}}
@@ -36,7 +38,9 @@
             </summary>
             {{^morehelpshown}}
                 <div class="flex-container">
-                    {{{shortdescription}}}
+                    <div class="filter_faq element">
+                        {{{shortdescription}}}
+                    </div>
                     <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
                         <i class="fa-solid fa-up-right-from-square"></i>
                         {{#str}} more_help, filter_faq {{/str}}
@@ -44,7 +48,9 @@
                 </div>
             {{/morehelpshown}}
             {{#morehelpshown}}
-                {{{shortdescription}}}
+                <div class="filter_faq element">
+                    {{{shortdescription}}}
+                </div>
             {{/morehelpshown}}
         </details>
     {{/longtitle}}
@@ -57,7 +63,9 @@
                 <i class="fa-regular fa-circle-question"></i>
                 {{{shorttitle}}}
             </summary>
-            {{{longdescription}}}
+            <div class="filter_faq element">
+                {{{longdescription}}}
+            </div>
         </details>
     {{/shorttitle}}
 {{/type_collapsibleshortlong}}
@@ -71,7 +79,9 @@
             </summary>
             {{^morehelpshown}}
                 <div class="flex-container">
-                    {{{shortdescription}}}
+                    <div class="filter_faq element">
+                        {{{shortdescription}}}
+                    </div>
                     <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
                         <i class="fa-solid fa-up-right-from-square"></i>
                         {{#str}} more_help, filter_faq {{/str}}
@@ -79,7 +89,9 @@
                 </div>
             {{/morehelpshown}}
             {{#morehelpshown}}
-                {{{shortdescription}}}
+                <div class="filter_faq element">
+                    {{{shortdescription}}}
+                </div>
             {{/morehelpshown}}
         </details>
     {{/shorttitle}}
@@ -140,26 +152,27 @@
 {{/type_modalshortshort}}
 
 {{#type_textlong}}
-    {{{longdescription}}}
+    <div class="filter_faq element">
+        {{{longdescription}}}
+    </div>
 {{/type_textlong}}
 
 {{#type_textshort}}
+    <div class="filter_faq element">
+        {{{shortdescription}}}
+    </div>
     {{^morehelpshown}}
-        <div>
-            {{{shortdescription}}}
-        </div>
         <a href="{{{urlprimary}}}" class="btn btn-link morehelp-btn" target="_blank">
             <i class="fa-solid fa-up-right-from-square"></i>
             {{#str}} more_help, filter_faq {{/str}}
         </a>
     {{/morehelpshown}}
-    {{#morehelpshown}}
-        {{{shortdescription}}}
-    {{/morehelpshown}}
 {{/type_textshort}}
 
 {{#type_textshortonly}}
-    {{{shortdescription}}}
+    <div class="filter_faq element">
+        {{{shortdescription}}}
+    </div>
 {{/type_textshortonly}}
 
 {{#type_titlelong}}

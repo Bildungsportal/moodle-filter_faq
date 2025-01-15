@@ -23,10 +23,23 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+require_once('../../config.php');
 
-$plugin->version = 2024110600;
-$plugin->requires = 2024100700;
-$plugin->component = 'filter_faq';
-$plugin->release = '0.7';
-$plugin->maturity = MATURITY_ALPHA;
+$PAGE->set_context(context_system::instance());
+$PAGE->set_url('/filter/faq/faq_call.php');
+
+$class = required_param('class', PARAM_TEXT);
+$params = required_param('params', PARAM_TEXT);
+$verification = required_param('verification', PARAM_TEXT);
+$paramarray = $params ? explode('~', $params) : [];
+
+// TODO: check verification like in eduportal/redirect.php
+
+if (!class_exists($class)) {
+    throw new \moodle_exception("callable:class_missing", 'filter_faq', '', ['class' => $class]);
+} elseif (!is_subclass_of($class, \filter_faq\callable_class::class)) {
+    // implementiert interface callable_class nicht
+    throw new \moodle_exception("callable:class_missing", 'filter_faq', '', ['class' => $class]);
+}
+
+$class::filter_faq_call($paramarray);

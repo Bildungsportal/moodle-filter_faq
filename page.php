@@ -69,24 +69,7 @@ if (empty($t)) {
 }
 
 if (empty($t)) {
-    ob_start();
     echo $OUTPUT->header();
-    $header = ob_get_clean();
-
-    $metaTags = '<link rel="canonical" href="' . $params->permalink . '">';
-    $alternateUrl = new \moodle_url('/filter/faq/page.php', ['p' => $p]);
-    $metaTags .= '<link rel="alternate" href="' . $alternateUrl . '">';
-    foreach (['de', 'en'] as $lang) {
-        $alternateUrl = new \moodle_url('/filter/faq/page.php', [
-            'p' => $p,
-            'lang' => $lang
-        ]);
-        $metaTags .= '<link rel="alternate" hreflang="' . $lang . '" href="' . $alternateUrl->out(false) . '">';
-        $metaTags .= '<link rel="alternate" hreflang="' . $lang . '" href="' . $alternateUrl->out(false) . '&t">';
-    }
-
-    $header = str_replace('</head>', $metaTags . '</head>', $header);
-    echo $header;
 }
 if ($t != 'linkurl') {
     echo format_text($html, FORMAT_HTML, $options);

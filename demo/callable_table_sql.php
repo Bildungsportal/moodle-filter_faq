@@ -14,19 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+// This script manages which interfaces an app is permitted to use,
+// and if the interfaces is activated by the partner.
+
 /**
- * Version of filter_eduportal.
- *
  * @package    filter_faq
- * @copyright  2023 Austrian Federal Ministry of Education
- * @author     Robert Schrenk
+ * @copyright  2022 Austrian Federal Ministry of Education
+ * @author     GTN solutions
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+require_once('../../../config.php');
+require_admin();
 
-$plugin->version = 2024110600;
-$plugin->requires = 2024100700;
-$plugin->component = 'filter_faq';
-$plugin->release = '0.7';
-$plugin->maturity = MATURITY_ALPHA;
+$PAGE->set_context(\context_system::instance());
+$PAGE->set_url('/filter/faq/demo/callable_table_sql');
+$PAGE->set_heading("Demo Table for callable_table_sql");
+$PAGE->set_title("Demo Table for local_table_sql");
+
+
+// $table = new callable_table_sql();
+
+echo $OUTPUT->header();
+
+
+echo format_text('{faq:call:' . \filter_faq\demo\callable_table_sql::class . '}', FORMAT_HTML);
+// $table->out();
+
+echo $OUTPUT->footer();

@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $string['cachdef_pages'] = 'Cache für Seitenpfade und Seiten-IDs';
+$string['callable:class_missing'] = 'Klasse {$a->class} oder ist kein kompatibles Callable für filter_faq';
 $string['exception:file_not_found'] = 'Datei {$a->file} existiert nicht';
 $string['exception:file_outside_bounds'] = 'Die angeforderte Datei ist außerhalb der erlaubten Grenzen!';
 $string['exception:no_such_path'] = 'Kein Pfad für die ID {$a->pathid} gefunden';

@@ -15,18 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version of filter_eduportal.
- *
  * @package    filter_faq
- * @copyright  2023 Austrian Federal Ministry of Education
- * @author     Robert Schrenk
+ * @copyright  2024 Austrian Federal Ministry of Education
+ * @author     GTN solutions
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace filter_faq;
+
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024110600;
-$plugin->requires = 2024100700;
-$plugin->component = 'filter_faq';
-$plugin->release = '0.7';
-$plugin->maturity = MATURITY_ALPHA;
+interface callable_class {
+    public static function filter_faq_call(array $params): string;
+}

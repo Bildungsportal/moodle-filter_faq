@@ -44,7 +44,8 @@ class externallib extends external_api {
     }
 
     public static function getpage($p, $ls, $text, $title) {
-        global $DB, $USER;
+        global $PAGE;
+        $PAGE->set_context(\context_system::instance());
         $params = self::validate_parameters(self::getpage_parameters(), [
             'p' => $p, 'ls' => $ls, 'text' => $text, 'title' => $title,
         ]);
@@ -57,10 +58,16 @@ class externallib extends external_api {
         $url = (new \moodle_url('/filter/faq/page.php', ['p' => $params['p']]))->out();
         $footer = '<a href="' . $url . '" target="_blank"><i class="fa-solid fa-up-right-from-square"></i>&nbsp;' . get_string('morehelp') . '</a>';
 
+         $options = [
+            'newlines' => false,
+            'noclean' => true,
+            'trusted' => true,
+        ];
+
         return (object)[
-            'body' => \filter_faq\lib::get_content($params['p'], $params['text'] . 'description', $params['ls']),
+            'body' => \format_text(\filter_faq\lib::get_content($params['p'], $params['text'] . 'description', $params['ls']), FORMAT_HTML, $options),
             'footer' => $text == 'short' ? $footer : '',
-            'title' => \filter_faq\lib::get_content($params['p'], $params['title'] . 'title', $params['ls']),
+            'title' => \format_text(\filter_faq\lib::get_content($params['p'], $params['title'] . 'title', $params['ls']), FORMAT_HTML, $options),
         ];
     }
 

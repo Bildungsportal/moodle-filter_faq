@@ -246,4 +246,12 @@ class lib {
 
         return $path;
     }
+
+    public static function get_call_url(callable_class $obj, array $params): \moodle_url {
+        return new \moodle_url('/filter/faq/faq_call.php', [
+            'class' => get_class($obj),
+            'params' => join('~', $params),
+            'verification' => '', // TODO: add verification like in eduportal/redirect.php
+        ]);
+    }
 }

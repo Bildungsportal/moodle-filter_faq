@@ -32,7 +32,27 @@ The `displaytype` regulates how the element is displayed and can have the follow
 - titlelong
 - titleshort
 
-The plugin also provides a string-API. Strings can be stored in the subfolder "stringlib", in which for each language a separate folder has to be created. Inside this folder files named by the respective moodle component and the extension ".json" can be placed. For example, one would place the file `{$CFG->datadir}/faq/stringlib/en/local_eduportal.json` with the content
+The plugin also provides a callable-API and string-API.
+
+## callable-API
+
+Developers can provide classes in their plugins that may be used to
+make contents of the faq pages more dynamic. For security reasons
+such class must be dedicated to be used for filter_faq.
+
+An example is placed in classes/demo/faq_callable.php.
+
+Such a class must implement `\filter_faq\callable_class` and the
+only required method `filter_faq_call()` that returns
+the desired content.
+
+The keyword for such call is `{faq:call:namespace\class~arg1~arg2}`. As
+already mentioned you are not limited to two arguments. You can use
+as many as you want, or none. All arguments are passed to the constructor
+of your class.
+
+## string-API
+Strings can be stored in the subfolder "stringlib", in which for each language a separate folder has to be created. Inside this folder files named by the respective moodle component and the extension ".json" can be placed. For example, one would place the file `{$CFG->datadir}/faq/stringlib/en/local_eduportal.json` with the content
 
 ```
 {

@@ -119,6 +119,6 @@ class hook_callbacks {
         }
     }
 
-        $PAGE->requires->css('/filter/faq/style/faq.css');
+        $PAGE->requires->css('/filter/faq/style/faq.css?2025041700');
     }
 }

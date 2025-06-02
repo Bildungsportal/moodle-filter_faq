@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024110600;
+$plugin->version = 2025052700;
 $plugin->requires = 2024100700;
 $plugin->component = 'filter_faq';
 $plugin->release = '0.7';

@@ -134,3 +134,7 @@ a.btn-link:not(.morehelp-btn) .fa-regular {
 .filter_faq.element .btn-link i {
     padding-right: 0;
 }
+
+.filter_faq a:not(.card):not(.btn) {
+    text-decoration: underline;
+}

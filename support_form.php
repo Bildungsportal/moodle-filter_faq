@@ -32,9 +32,7 @@ $PAGE->set_context(context_system::instance());
 
 class filter_faq_support_form extends \moodleform {
     const FILE_EXTENSIONS = [
-        '.jpg',
-        '.jpeg',
-        '.pdf',
+        '.jpg', '.png', '.pdf', '.doc', '.xls', '.txt', '.svg', '.jpeg', '.docx', '.xlsx', '.gif',
     ];
 
     function __construct(private ?object $user, private object $data, private array $orgids) {
@@ -96,7 +94,7 @@ class filter_faq_support_form extends \moodleform {
         }
 
         $areanames = [0 => ''];
-        $orgs = $DB->get_records_select('local_eduportal_org', "", [], 'orgid ASC',);
+        $orgs = $DB->get_records_select('local_eduportal_org', "", [], 'orgid ASC');
         foreach ($orgs as $org) {
             $fields = [
                 $org->orgid,
@@ -142,7 +140,7 @@ class filter_faq_support_form extends \moodleform {
 
         // $mform->addElement('filemanager', 'files', 'Anhänge');
 
-        $mform->addElement('static', 'files_static', 'Anhänge', '<input type="file" name="files[]" accept="' . join(',', static::FILE_EXTENSIONS) . '" multiple>');
+        $mform->addElement('static', 'files_static', 'Anhänge (max. 5 MB je Datei)', '<input type="file" name="files[]" accept="' . join(',', static::FILE_EXTENSIONS) . '" multiple>');
         // so fileuploads work:
         $mform->updateAttributes(['enctype' => 'multipart/form-data']);
 
@@ -249,9 +247,15 @@ if ($fromform = $form->get_data()) {
                 break;
             }
 
-            $regexp = '!(' . str_replace('.', '\.', join('|', filter_faq_support_form::FILE_EXTENSIONS)) . ')$!';
+            $regexp = '!(' . str_replace('.', '\.', join('|', filter_faq_support_form::FILE_EXTENSIONS)) . ')$!i';
             if (!preg_match($regexp, strtolower($_FILES['files']['name'][$key]))) {
                 $error = 'Dateiendung nicht erlaubt: ' . $_FILES['files']['name'][$key];
+                break;
+            }
+
+            $size = $_FILES['files']['size'][$key];
+            if ($size > 5 * 1024 * 1024) {
+                $error = 'Maximalgröße von 5 MB überschritten: ' . $_FILES['files']['name'][$key];
                 break;
             }
 
@@ -271,15 +275,22 @@ if ($fromform = $form->get_data()) {
         // return $this->request($url, $options);
 
         if ($post_data && !$error) {
-            $seed = microtime(true);
+            $seed = 'seed_' . microtime(true);
+            $secret = get_config('filter_faq', 'redmine_secret');
 
             $post_data = array_merge([
-                'secret' => '1234', // TODO
+                'secret' => $secret,
                 'seed' => $seed,
             ], $post_data);
 
             // $result = $c->post('http://localhost/moodle/filter/faq/redmine/post-file.php', $post_data);
             $result = $c->post('https://support.bildung.gv.at/support-form/post-file.php', $post_data);
+            if ($CFG->developermode ?? false) {
+                echo '<pre>';
+                echo "result file post: ";
+                var_dump($result);
+                echo '</pre>';
+            }
             if ($result) {
                 $result = json_decode($result);
             }

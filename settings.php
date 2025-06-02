@@ -33,4 +33,14 @@ if ($ADMIN->fulltree) {
             PARAM_URL
         )
     );
+
+    $settings->add(
+        new \admin_setting_configtext(
+            "filter_faq/redmine_secret",
+            'Redmine secret',
+            '',
+            '',
+            PARAM_TEXT
+        )
+    );
 }

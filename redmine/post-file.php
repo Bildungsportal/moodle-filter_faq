@@ -131,6 +131,20 @@ function handle_upload($config) {
     return $result;
 }
 
+$action = $_REQUEST['action'] ?? null;
+if ($action == 'permission_test') {
+    $verzeichnis_upload = rtrim($config['verzeichnis_upload'], '/') . '/' . time();
+
+    header("Content-Type: text/plain");
+    echo "checking permissions:\n";
+    echo "{$config['verzeichnis_upload']} writeable? " . (is_writable($config['verzeichnis_upload']) ? 'yes' : 'no') . "\n";
+    echo "creating test directory: " . (mkdir($verzeichnis_upload, 0777, true) ? 'ok' : 'error') . "\n";
+    echo "test directory writeable? " . (is_writable($verzeichnis_upload) ? 'yes' : 'no') . "\n";
+    echo "deleting test directory";
+    rmdir($verzeichnis_upload);
+    exit;
+}
+
 try {
     $secret = $_REQUEST['secret'] ?? null;
     if ($secret != $config['secret']) {

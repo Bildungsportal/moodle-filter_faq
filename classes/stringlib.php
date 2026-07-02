@@ -29,19 +29,21 @@ defined('MOODLE_INTERNAL') || die;
 class stringlib {
     private static $cache = null;
 
-    public static function get_string(string $identifier, string $component, $a = null, ?string $default = null): string {
+    public static function get_string(string $identifier, string $component, $a = null, ?string $default = null, array $languages = []): string {
         global $CFG;
         if (empty(self::$cache))
             self::$cache = \cache::make('filter_faq', 'string');
 
         $cleanidentifier = clean_param($identifier, PARAM_STRINGID);
-        $curlang = current_language();
-        $secondarylang = \filter_faq\lib::default_lang();
-        $langs = [$curlang];
-        if ($curlang != $secondarylang) {
-            $langs[] = $secondarylang;
+        if (count($languages) == 0) {
+            $curlang = current_language();
+            $secondarylang = \filter_faq\lib::default_lang();
+            $languages = [$curlang];
+            if ($curlang != $secondarylang) {
+                $languages[] = $secondarylang;
+            }
         }
-        foreach ($langs as $lang) {
+        foreach ($languages as $lang) {
             if (empty(self::$cache->get("loaded_{$component}_{$lang}"))) {
                 self::load_component_strings($component, $lang);
             }
@@ -51,8 +53,10 @@ class stringlib {
         }
 
         // Fallback to default function
-        if (\get_string_manager()->string_exists($cleanidentifier, $component)) {
-            return \get_string_manager()->get_string($cleanidentifier, $component, $a);
+        foreach ($languages as $lang) {
+            if (\get_string_manager()->string_exists($cleanidentifier, $component)) {
+                return \get_string_manager()->get_string($cleanidentifier, $component, $a, $lang);
+            }
         }
 
         if ($default !== null) {

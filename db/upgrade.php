@@ -39,6 +39,22 @@ function xmldb_filter_faq_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, 2023042100, 'filter', 'faq');
     }
+    if ($oldversion < 2026032800) {
+        $table = new xmldb_table('filter_faq_pages');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('pathid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('lang', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('version', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('key_pathid', XMLDB_KEY_FOREIGN, ['pathid'], 'filter_faq', ['id']);
+        $table->add_index('idx_pathid_lang', XMLDB_INDEX_UNIQUE, ['pathid', 'lang']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_plugin_savepoint(true, 2026032800, 'filter', 'faq');
+    }
+
 
     return true;
 }

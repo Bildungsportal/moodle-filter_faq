@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    local_faq
+ * @package    filter_faq
  * @copyright  2023 Austrian Federal Ministry of Education
  * @author     Robert Schrenk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -41,13 +41,16 @@ class lib {
      * @param array $langs the languages to use
      * @return string
      */
-    public static function get_content(int $pathid, string $content, array $langs): string {
+    public static function get_content(int $pathid, string $content, array $languages): string {
         $path = self::get_path($pathid);
 
-        $generalfilepath = new \moodle_url('/filter/faq/generalfile.php', ['l' => $langs[0]]);
-        $elementfilepath = new \moodle_url('/filter/faq/elementfile.php', ['l' => $langs[0], 'p' => $pathid]);
+        $generalfilepath = new \moodle_url('/filter/faq/generalfile.php', ['l' => $languages[0]]);
+        $elementfilepath = new \moodle_url('/filter/faq/elementfile.php', ['l' => $languages[0], 'p' => $pathid]);
 
-        foreach ($langs as $lang) {
+        foreach ($languages as $lang) {
+            $timemodified = static::get_path_timemodified($pathid, $lang);
+            $generalfilepath->param('t', $timemodified);
+            $elementfilepath->param('t', $timemodified);
             // For security reasons we check again if the realpath is valid and inside the boundaries.
             $file = static::check_faq_path("$lang/$path/$content");
             if (file_exists($file)) {
@@ -123,6 +126,29 @@ class lib {
     }
 
     /**
+     * Get the timemodified of a pathid.
+     * @param int $pathid
+     * @param string $lang
+     * @return int|null
+     * @throws \dml_exception
+     */
+    public static function get_path_timemodified(int $pathid, string $lang): ?int {
+        global $DB;
+        $timemodified = \filter_faq\cachelib::get('pages', 'timemodified_' . $lang, $pathid);
+        if ($timemodified)
+            return $timemodified;
+
+        $record = $DB->get_record('filter_faq_pages', ['pathid' => $pathid, 'lang' => $lang]);
+        if ($record) {
+            \filter_faq\cachelib::set('pages', 'timemodified_' . $lang, $record->timemodified);
+            return $record->timemodified;
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
      * Test if a certain relative path exists in a certain language, and that it is not outside the FAQ-basepath.
      * @param string $path
      * @param string $lang
@@ -145,7 +171,6 @@ class lib {
         $path = str_replace('//', '/', $path);
         // Not allowed to use such parameters.
         $path = str_replace('/../', '/', $path);
-
 
         if (empty($lang)) {
             $lang = \filter_faq\lib::default_lang();
@@ -177,16 +202,42 @@ class lib {
         return null;
     }
 
+    /**
+     * Get tags of a certain page as array.
+     * @param int $pathid
+     * @param string $lang
+     * @return array
+     * @throws \moodle_exception
+     */
+    public static function get_tags(int $pathid, array $languages = []): array {
+        if (count($languages) == 0) {
+            $current_language = current_language();
+            $secondary_language = \filter_faq\lib::default_lang();
+            $languages = [$current_language];
+            if ($current_language != $secondary_language) {
+                $languages[] = $secondary_language;
+            }
+        }
+        $tagsfile = \filter_faq\lib::get_filepath($pathid, 'tags', $languages);
+        if ($tagsfile && file_exists($tagsfile)) {
+            return array_filter(array_map('trim', explode("\n", file_get_contents($tagsfile))));
+        }
+        return [];
+    }
+
     public static function check_faq_path($relative_path) {
         global $CFG;
 
         $basepath = str_replace('\\', '/', $CFG->dataroot) . '/faq';
+        // Realpath ensures that no ".." or "." reside in the path.
         $file = self::realpath("$basepath/$relative_path");
-
         if (!str_starts_with($file, $basepath)) {
             throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
         }
-
+        // Check that no hidden directories / files are accessec.
+        if (str_starts_with($file, '.') || str_contains($file, '/.')) {
+            throw new \moodle_exception('exception:file_path_invalid', 'filter_faq');
+        }
         return $file;
     }
 

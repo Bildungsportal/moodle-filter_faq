@@ -29,6 +29,8 @@ require_once($CFG->libdir . '/filelib.php');
 
 $PAGE->set_url('/filter/faq/support_form.php');
 $PAGE->set_context(context_system::instance());
+$PAGE->set_title(get_string('support_form', 'filter_faq'));
+$PAGE->set_heading(get_string('support_form', 'filter_faq'));
 
 class filter_faq_support_form extends \moodleform {
     const FILE_EXTENSIONS = [
@@ -36,7 +38,7 @@ class filter_faq_support_form extends \moodleform {
     ];
 
     function __construct(private ?object $user, private object $data, private array $orgids) {
-        parent::__construct();
+        parent::__construct($_SERVER['REQUEST_URI']);
     }
 
     function definition() {
@@ -52,7 +54,7 @@ class filter_faq_support_form extends \moodleform {
             $addStatic(get_string('name'), $this->data->name);
         } else {
             $mform->addElement('text', 'name', get_string('name'));
-            $mform->addRule('name', get_string('required'), 'required');
+            $mform->addRule('name', get_string('required'), 'required', validation: 'client');
             $mform->setType('name', PARAM_TEXT);
         }
 
@@ -60,7 +62,7 @@ class filter_faq_support_form extends \moodleform {
             $addStatic(get_string('email'), $this->data->email);
         } else {
             $mform->addElement('text', 'email', get_string('email'));
-            $mform->addRule('email', get_string('required'), 'required');
+            $mform->addRule('email', get_string('required'), 'required', validation: 'client');
             $mform->setType('email', PARAM_EMAIL);
         }
 
@@ -130,12 +132,28 @@ class filter_faq_support_form extends \moodleform {
         $mform->setType('bundesland', PARAM_TEXT);
         */
 
+        if ($this->data->projekt_readonly ?? false) {
+            $mform->addElement('static', 'projekt', 'Projekt', $this->data->projekt);
+        } else {
+            $projekte = [
+                '' => '',
+                'Bildungsportal' => 'Bildungsportal',
+                'Digitale Prüfungsumgebung' => 'Digitale Prüfungsumgebung',
+                'eEducation Austria' => 'eEducation Austria',
+                'edu.digicard' => 'edu.digicard',
+                'eduvidual.at' => 'eduvidual.at',
+            ];
+            $mform->addElement('select', 'projekt', 'Projekt', $projekte);
+            $mform->setType('projekt', PARAM_TEXT);
+            $mform->addRule('projekt', get_string('required'), 'required', validation: 'client');
+        }
+
         $mform->addElement('text', 'subject', get_string('subject'));
-        $mform->addRule('subject', get_string('required'), 'required');
+        $mform->addRule('subject', get_string('required'), 'required', validation: 'client');
         $mform->setType('subject', PARAM_TEXT);
 
         $mform->addElement('textarea', 'description', get_string('description'));
-        $mform->addRule('description', get_string('required'), 'required');
+        $mform->addRule('description', get_string('required'), 'required', validation: 'client');
         $mform->setType('description', PARAM_TEXT);
 
         // $mform->addElement('filemanager', 'files', 'Anhänge');
@@ -185,9 +203,12 @@ if (isloggedin() && !isguestuser()) {
     $user = null;
 }
 
+$projekt = clean_param($_GET['projekt'] ?? '', PARAM_TEXT);
 $data = (object)[
     'name' => $user ? fullname($user) : null,
     'email' => $user ? $user->email : null,
+    'projekt' => $projekt, // default wert von get formular
+    'projekt_readonly' => !!$projekt,
     // 'personalnummer' => 'dfdfss',
 ];
 
@@ -335,6 +356,9 @@ if ($fromform = $form->get_data()) {
             'issue[custom_field_values][4]' => join(', ', $selected_orgids),
             'issue[custom_field_values][5]' => $seed,
             'issue[custom_field_values][6]' => $data->personalnummer,
+            // Feld 11: link zum Profil
+            'issue[custom_field_values][10]' => $user ? $CFG->wwwroot . '/user/profile.php?id=' . $user->id : '',
+            'issue[custom_field_values][11]' => $data->projekt,
         ];
 
         if ($CFG->developermode ?? false) {

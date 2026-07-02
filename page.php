@@ -51,11 +51,13 @@ $params = (object)[
     'permalink' => \filter_faq\lib::permalink($pathrecord->path),
     'shortdescription' => \filter_faq\lib::get_content($p, 'shortdescription', $langs),
     'shorttitle' => \filter_faq\lib::get_content($p, 'shorttitle', $langs),
+    'tags' => \filter_faq\lib::get_tags($p, $langs),
 ];
 
 $PAGE->set_title($params->shorttitle);
 $PAGE->set_heading($params->longtitle);
 $PAGE->requires->css('/filter/faq/style/print.css');
+$PAGE->requires->js_init_code("setInterval(function() { require(['core/copy_to_clipboard']); }, 1000);");
 
 $options = [
     'newlines' => false,
@@ -76,6 +78,7 @@ if ($t != 'linkurl') {
 } else {
     echo $html;
 }
+
 if (empty($t)) {
     echo $OUTPUT->footer();
 }

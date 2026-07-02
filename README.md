@@ -70,6 +70,16 @@ Further, you can use the stringlib with its short-code, e.g.
 
 Which basically has the Syntas {faq:stringlib:_textid_~_component_~_defaultvalue_}.
 
+## parallax effects
+
+This plugin supports parallax effects by use of the [aos-library](https://github.com/michalsnik/aos). To enable this feature, you must include a special keyword within the page content:
+
+```
+{faq:feature:parallax}
+```
+
+Please refer to the [demo-file](demo/parallax-demo.html).
+
 ## Specification of files and values
 ### Files
 #### version

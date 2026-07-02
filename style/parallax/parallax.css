@@ -1,0 +1,89 @@
+.parallaxpage-nav {
+    position: sticky;
+    top: 130px;
+    width: 100%;
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.parallaxpage-nav .parallaxpage-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.parallaxpage-nav h1 {
+    font-size: 1.2rem;
+    color: #8b0000;
+    margin: 0;
+}
+
+.parallaxpage-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.parallaxpage-nav a {
+    text-decoration: none;
+    color: #8b0000;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.parallaxpage-nav a:hover {
+    text-decoration: underline;
+}
+
+.parallaxpage section {
+    width: 100%;
+    /* display: flex; */
+    /* padding: 3rem 1rem; */
+}
+
+.parallaxpage section .parallax-bg {
+    min-height: 100vh;
+    min-width: 100%;
+}
+
+.parallaxpage section .parallax-content {
+    background-color: rgba(232, 225, 225, 0.6);
+    min-height: calc(100vh - 150px);
+    margin: 50px;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.parallaxpage-container {
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-sizing: content-box;
+}
+.parallaxpage-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    /* color: #232121; */
+    /* text-shadow: 2px 2px 2px rgba(0, 0, 0, 1); */
+}
+
+.parallaxpage-container p,
+.parallaxpage-container li {
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.parallaxpage-container ul {
+    padding-left: 1.2rem;
+}
+
+.parallaxpage-container li {
+    margin-bottom: 0.5rem;
+}

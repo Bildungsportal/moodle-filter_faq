@@ -42,7 +42,6 @@ if (!empty($filepath) && file_exists($filepath)) {
     header("Content-Type: $mimetype");
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: ' . filesize($filepath));
-    ob_clean();
     flush();
     readfile($filepath);
     exit;

@@ -21,7 +21,10 @@
             <i class="fa-solid fa-print"></i>
             <span class="sr-only">{{#str}} print, filter_faq {{/str}}</span>
         </a>
-        <a href="{{{permalink}}}" class="btn btn-primary">
+        <input type="hidden" id="copy-permalink-{{uniqid}}" value="{{{permalink}}}" />
+        <a class="btn btn-link" data-action="copytoclipboard"
+            data-clipboard-target="#copy-permalink-{{uniqid}}"
+            data-clipboard-success-message="{{#str}} permalink:copied_to_clipboard, filter_faq {{/str}}">
             <i class="fa-solid fa-link"></i>
             <span class="sr-only">{{#str}} permalink, filter_faq {{/str}}</span>
         </a>

@@ -15,18 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version of filter_eduportal.
- *
  * @package    filter_faq
- * @copyright  2023 Austrian Federal Ministry of Education
+ * @copyright  2026 Austrian Federal Ministry of Education
  * @author     Robert Schrenk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026032800;
-$plugin->requires = 2024100700;
-$plugin->component = 'filter_faq';
-$plugin->release = '0.7';
-$plugin->maturity = MATURITY_ALPHA;
+$tasks = array(
+    array(
+        'classname' => 'filter_faq\task\scanpages',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '5',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*',
+    ),
+);
+

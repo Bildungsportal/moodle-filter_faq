@@ -30,7 +30,6 @@ defined('MOODLE_INTERNAL') || die;
 
 class cachelib {
     private static $caches = [];
-    private static $cacheDisabled = null;
 
     const FALSE_VALUE = 'cachelib_internal_false_value';
 

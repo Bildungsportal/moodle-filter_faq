@@ -34,13 +34,19 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    $settings->add(
-        new \admin_setting_configtext(
-            "filter_faq/redmine_secret",
-            'Redmine secret',
-            '',
-            '',
-            PARAM_TEXT
-        )
-    );
+    /*
+     * This setting refers to a custom extensions that is not shipped with this plugin.
+     * You can safely ignore it.
+     */
+    if (check_dir_exists(__DIR__ . "/redmine")) {
+        $settings->add(
+            new \admin_setting_configtext(
+                "filter_faq/redmine_secret",
+                'Redmine secret', // As this is only a custom code, we do not include it into the language libraries.
+                '',
+                '',
+                PARAM_TEXT
+            )
+        );
+    }
 }

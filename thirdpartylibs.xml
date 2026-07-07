@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>node_modules/aos/</location>
+        <location>thirdparty/aos/</location>
         <name>aos</name>
         <version>3.0.0-beta.6</version>
         <license>MIT</license>

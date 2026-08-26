@@ -23,7 +23,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Disable moodle specific debug messages and any errors in output
+define('NO_DEBUG_DISPLAY', true);
+// Cookies may interfere with caching
+define('NO_MOODLE_COOKIES', true);
 require_once('../../config.php');
+require_once("{$CFG->libdir}/filelib.php");
 
 $f = required_param('f', PARAM_TEXT);
 $l = optional_param('lang', current_language(), PARAM_TEXT);
@@ -37,14 +42,12 @@ if ($l != $secondarylang) {
 $filepath = \filter_faq\lib::get_generalfilepath($f, $langs);
 
 if (!empty($filepath) && file_exists($filepath)) {
-    $extension = pathinfo($filepath, PATHINFO_EXTENSION);
-    $mimetype = mime_content_type($filepath);
-    header("Content-Type: $mimetype");
-    header('Content-Transfer-Encoding: binary');
-    header('Content-Length: ' . filesize($filepath));
-    flush();
-    readfile($filepath);
-    exit;
+    // The url contains the timemodified as cache buster, so the file may be cached for a long time.
+    // The immutable option raises the lifetime to at least 90 days.
+    send_file($filepath, basename($filepath), lifetime: DAYSECS * 30, options: [
+        'cacheability' => 'public',
+        'immutable' => true,
+    ]);
 } else {
     $exparams = (object)[
         'filename' => $f,

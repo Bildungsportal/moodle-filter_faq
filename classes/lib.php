@@ -228,10 +228,10 @@ class lib {
     public static function check_faq_path($relative_path) {
         global $CFG;
 
-        $basepath = str_replace('\\', '/', $CFG->dataroot) . '/faq';
+        $basepath = rtrim(str_replace('\\', '/', $CFG->dataroot), '/') . '/faq';
         // Realpath ensures that no ".." or "." reside in the path.
         $file = self::realpath("$basepath/$relative_path");
-        if (!str_starts_with($file, $basepath)) {
+        if ($file !== $basepath && !str_starts_with($file, $basepath . '/')) {
             throw new \moodle_exception('exception:file_outside_bounds', 'filter_faq');
         }
         // Check that no hidden directories / files are accessec.
@@ -299,10 +299,19 @@ class lib {
     }
 
     public static function get_call_url(callable_class $obj, array $params): \moodle_url {
+        // If no secret key is set up, generate a new one.
+        $secretKey = get_config('filter_faq', 'callable_secret');
+        if (!$secretKey) {
+            // Create a random secret key.
+            $secretKey = base64_encode(random_bytes(32));
+            set_config('callable_secret', $secretKey, 'filter_faq');
+        }
+
         return new \moodle_url('/filter/faq/faq_call.php', [
             'class' => get_class($obj),
-            'params' => join('~', $params),
-            'verification' => '', // TODO: add verification like in eduportal/redirect.php
+            'iat' => time(),
+            'params' => base64_encode(json_encode($params)),
+            'verification' => hash('sha256', http_build_query($params, '', '&') . $secretKey . session_id()),
         ]);
     }
 }

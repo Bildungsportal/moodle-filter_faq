@@ -31,9 +31,18 @@ $PAGE->set_url('/filter/faq/faq_call.php');
 $class = required_param('class', PARAM_TEXT);
 $params = required_param('params', PARAM_TEXT);
 $verification = required_param('verification', PARAM_TEXT);
-$paramarray = $params ? explode('~', $params) : [];
 
-// TODO: check verification like in eduportal/redirect.php
+$params = json_decode(base64_decode($params));
+
+$secretKey = get_config('filter_faq', 'callable_secret');
+$verificationString = hash('sha256', http_build_query($params, '', '&') . $secretKey . session_id());
+
+// check verification
+if ($verification !== $verificationString) {
+    throw new \moodle_exception('accessdenied', 'admin');
+    require_logout();
+    require_login();
+}
 
 if (!class_exists($class)) {
     throw new \moodle_exception("callable:class_missing", 'filter_faq', '', ['class' => $class]);
@@ -42,4 +51,4 @@ if (!class_exists($class)) {
     throw new \moodle_exception("callable:class_missing", 'filter_faq', '', ['class' => $class]);
 }
 
-$class::filter_faq_call($paramarray);
+$class::filter_faq_call($params);

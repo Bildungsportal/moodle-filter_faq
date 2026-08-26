@@ -25,9 +25,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $functions = array(
     'filter_faq_getpage' => array(
-        'classname' => '\filter_faq\externallib',
-        'methodname' => 'getpage',
-        'classpath' => 'filter/faq/classes/externallib.php',
+        'classname' => '\filter_faq\external\get_page',
         'description' => 'Get the page content of a helptext.',
         'type' => 'read',
         'ajax' => 1,

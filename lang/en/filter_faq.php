@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 $string['cachedef_pages'] = 'Cache for paths and ids of pages';
 $string['cachedef_string'] = 'Cache for stringlib';
 $string['callable:class_missing'] = 'Class {$a->class} does not exist or is no compatible filter_faq callable';
+$string['demo_parallax_heading'] = 'Demo for parallax effect';
 $string['exception:file_not_found'] = 'File {$a->file} does not exist';
 $string['exception:file_outside_bounds'] = 'The requested file is outside the permitted boundaries!';
 $string['exception:file_path_invalid'] = 'The requested file path is invalid!';

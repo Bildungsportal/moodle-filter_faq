@@ -38,7 +38,7 @@ if ($ADMIN->fulltree) {
      * This setting refers to a custom extensions that is not shipped with this plugin.
      * You can safely ignore it.
      */
-    if (check_dir_exists(__DIR__ . "/redmine")) {
+    if (is_dir(__DIR__ . "/redmine")) {
         $settings->add(
             new \admin_setting_configtext(
                 "filter_faq/redmine_secret",

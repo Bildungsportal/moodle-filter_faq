@@ -100,7 +100,7 @@ class text_filter extends \core_filters\text_filter {
                                 $elementtext .=  "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$CFG->wwwroot}/filter/faq/style/parallax/parallax.css?{$sourceversion}\">\n";
                                 $elementtext .=  "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$CFG->wwwroot}/filter/faq/thirdparty/aos/aos.css?{$sourceversion}\">\n";
                                 $elementtext .=  "<script src=\"{$CFG->wwwroot}/filter/faq/thirdparty/aos/aos.js?{$sourceversion}\"></script>\n";
-                                $elementtext .=  "<script src=\"{$CFG->wwwroot}/filter/faq/script/parallax/parallax.js?{$sourceversion}\"></script>\n";
+                                $elementtext .=  "<script src=\"{$CFG->wwwroot}/filter/faq/amd/build/parallax.min.js?{$sourceversion}\"></script>\n";
                             }
                             break;
                     }

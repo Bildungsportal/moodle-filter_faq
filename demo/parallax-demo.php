@@ -27,10 +27,11 @@
 require_once('../../../config.php');
 require_admin();
 
+$heading = get_string('demo_parallax_heading', 'filter_faq');
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_url('/filter/faq/demo/parallax-demo.php');
-$PAGE->set_heading("Demo for parallax effect");
-$PAGE->set_title("Demo for parallax effect");
+$PAGE->set_heading($heading);
+$PAGE->set_title($heading);
 
 echo $OUTPUT->header();
 $options = [

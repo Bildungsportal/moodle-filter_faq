@@ -57,7 +57,7 @@ $params = (object)[
 $PAGE->set_title($params->shorttitle);
 $PAGE->set_heading($params->longtitle);
 $PAGE->requires->css('/filter/faq/style/print.css');
-$PAGE->requires->js_init_code("setInterval(function() { require(['core/copy_to_clipboard']); }, 1000);");
+$PAGE->requires->js_call_amd('filter_faq/clipboard', 'init');
 
 $options = [
     'newlines' => false,
